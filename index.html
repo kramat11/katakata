@@ -3,43 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator & Salin Kalimat</title>
+    <title></title>
     <style>
         /* Google Fonts untuk tampilan yang lebih menarik */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
+        /* --- CSS Variables untuk Tema --- */
+        :root {
+            --bg-gradient-start: #4facfe;
+            --bg-gradient-mid-1: #00f2fe;
+            --bg-gradient-mid-2: #43e97b;
+            --bg-gradient-end: #0ba360;
+            --content-bg: rgba(255, 255, 255, 0.85); /* Transparan */
+            --text-primary: #333;
+            --text-secondary: #777;
+            --text-muted: #555;
+            --input-bg: rgba(249, 249, 249, 0.7); /* Sedikit transparan */
+            --input-border: rgba(224, 224, 224, 0.5);
+            --result-bg: rgba(249, 249, 249, 0.7);
+            --result-text: #444;
+            --accent-color: #4facfe;
+            --copy-btn-bg: rgba(228, 230, 235, 0.7);
+            --copy-btn-icon: #65676b;
+            --tab-color: #777;
+            --tab-active-color: #4facfe;
+            --btn-primary-bg: #4facfe;
+            --btn-success-bg: #28a745;
+            --btn-secondary-bg: #6c757d;
+        }
+
+        body.dark-mode {
+            --bg-gradient-start: #141e30;
+            --bg-gradient-mid-1: #243b55;
+            --bg-gradient-mid-2: #2c5364;
+            --bg-gradient-end: #0f3460;
+            --content-bg: rgba(44, 44, 44, 0.85); /* Transparan */
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #a0a0a0;
+            --input-bg: rgba(58, 58, 58, 0.7);
+            --input-border: rgba(74, 74, 74, 0.5);
+            --result-bg: rgba(58, 58, 58, 0.7);
+            --result-text: #e0e0e0;
+            --accent-color: #00f2fe;
+            --copy-btn-bg: rgba(74, 74, 74, 0.7);
+            --copy-btn-icon: #b0b0b0;
+            --tab-color: #b0b0b0;
+            --tab-active-color: #00f2fe;
+            --btn-primary-bg: #00f2fe;
+            --btn-success-bg: #2ea043;
+            --btn-secondary-bg: #5a6268;
+        }
+
         /* CSS untuk tampilan */
         body {
             font-family: 'Poppins', sans-serif;
-            /* Background gradien agar tidak polos */
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
+            /* Background dengan animasi dan warna baru */
+            background: linear-gradient(-45deg, var(--bg-gradient-start), var(--bg-gradient-mid-1), var(--bg-gradient-mid-2), var(--bg-gradient-end));
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        /* Animasi Background */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .content-box {
-            background-color: #ffffff;
+            background-color: var(--content-bg);
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Bayangan yang lebih modern */
+            backdrop-filter: blur(10px); /* Efek blur pada background di belakang kontainer */
+            -webkit-backdrop-filter: blur(10px); /* Untuk browser WebKit */
+            border: 1px solid rgba(255, 255, 255, 0.18); /* Border tipis untuk efek kaca */
             text-align: center;
             max-width: 600px;
             width: 100%;
         }
 
-        h1 {
-            color: #333;
+        /* Header dengan Theme Toggle */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 10px;
+        }
+
+        h1 {
+            color: var(--text-primary);
+            margin: 0;
             font-weight: 600;
         }
 
+        /* Theme Toggle Switch */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "🌙";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            content: "☀️";
+        }
+
         .subtitle {
-            color: #777;
+            color: var(--text-secondary);
             margin-bottom: 30px;
             font-size: 16px;
         }
@@ -48,7 +165,7 @@
         .tab-navigation {
             display: flex;
             margin-bottom: 30px;
-            border-bottom: 2px solid #e0e0e0;
+            border-bottom: 2px solid var(--input-border);
         }
 
         .tab-button {
@@ -59,14 +176,14 @@
             font-family: 'Poppins', sans-serif;
             font-size: 16px;
             font-weight: 600;
-            color: #777;
+            color: var(--tab-color);
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
         }
 
         .tab-button.active {
-            color: #667eea;
+            color: var(--tab-active-color);
         }
 
         .tab-button.active::after {
@@ -76,7 +193,7 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background-color: #667eea;
+            background-color: var(--tab-active-color);
         }
 
         .tab-content {
@@ -96,26 +213,26 @@
         .country-selector label, .quantity-selector label {
             display: block;
             margin-bottom: 10px;
-            color: #555;
+            color: var(--text-muted);
             font-weight: 600;
         }
 
         .country-selector select, .quantity-selector input {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--input-border);
             border-radius: 10px;
-            background-color: #f9f9f9;
+            background-color: var(--input-bg);
             font-family: 'Poppins', sans-serif;
             font-size: 16px;
-            color: #333;
+            color: var(--text-primary);
             transition: border-color 0.3s ease;
-            box-sizing: border-box; /* Pastikan padding tidak menambah lebar */
+            box-sizing: border-box;
         }
 
         .country-selector select:focus, .quantity-selector input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--accent-color);
         }
 
         /* Container untuk menampung kalimat dan tombol salin */
@@ -135,12 +252,12 @@
 
         #sentence-display {
             font-size: 1.1rem;
-            color: #444;
+            color: var(--result-text);
             text-align: left;
-            background-color: #f9f9f9;
+            background-color: var(--result-bg);
             padding: 20px;
             border-radius: 12px;
-            border-left: 5px solid #667eea;
+            border-left: 5px solid var(--accent-color);
             flex-grow: 1;
             white-space: pre-wrap;
             word-wrap: break-word;
@@ -151,13 +268,13 @@
             width: 100%;
             min-height: 200px;
             padding: 15px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--input-border);
             border-radius: 10px;
-            background-color: #f9f9f9;
+            background-color: var(--result-bg);
             font-family: 'Poppins', sans-serif;
-            font-size: 0.9rem; /* Font size lebih kecil */
-            color: #444;
-            resize: vertical; /* Biarkan user resize vertikal */
+            font-size: 0.9rem;
+            color: var(--result-text);
+            resize: vertical;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
             margin: 30px 0;
@@ -170,7 +287,7 @@
 
         /* Gaya untuk tombol salin */
         .copy-btn {
-            background-color: #e4e6eb;
+            background-color: var(--copy-btn-bg);
             border: none;
             width: 40px;
             height: 40px;
@@ -184,17 +301,17 @@
         }
 
         .copy-btn:hover {
-            background-color: #d8dadf;
+            background-color: var(--text-muted);
         }
         
         .copy-btn.copied {
-            background-color: #28a745;
+            background-color: var(--btn-success-bg);
         }
 
         .copy-btn svg {
             width: 20px;
             height: 20px;
-            fill: #65676b;
+            fill: var(--copy-btn-icon);
             transition: fill 0.2s ease-in-out;
         }
 
@@ -207,53 +324,36 @@
             display: flex;
             gap: 15px;
             justify-content: center;
-            flex-wrap: wrap; /* Biarkan tombol pindah baris di layar kecil */
+            flex-wrap: wrap;
+        }
+
+        .generate-btn, .refresh-btn, .copy-all-btn {
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .generate-btn {
-            background-color: #667eea;
-            color: white;
-            border: none;
-            padding: 15px 35px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            background-color: var(--btn-primary-bg);
         }
 
         .generate-btn:hover {
-            background-color: #5469d4;
+            background-color: var(--tab-active-color);
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
-        }
-
-        .generate-btn:active {
-            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
         }
         
-        /* Gaya untuk tombol Refresh */
         .refresh-btn {
-            background-color: #6c757d; /* Warna abu-abu netral */
-            color: white;
-            border: none;
-            padding: 15px 35px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px; /* Jarak antara ikon dan teks */
-        }
-        
-        .refresh-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: white;
+            background-color: var(--btn-secondary-bg);
         }
 
         .refresh-btn:hover {
@@ -262,30 +362,45 @@
             box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
         }
 
-        .refresh-btn:active {
-            transform: translateY(-1px);
-        }
-
-        /* Gaya khusus untuk tombol copy all */
         .copy-all-btn {
-            background-color: #28a745; /* Warna hijau untuk menonjol */
+            background-color: var(--btn-success-bg);
         }
 
         .copy-all-btn:hover {
-            background-color: #218838; /* Hijau lebih tua saat hover */
+            background-color: #218838;
+            transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .generate-btn:active, .refresh-btn:active, .copy-all-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .refresh-btn svg, .copy-all-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
         }
     </style>
 </head>
 <body>
 
     <div class="content-box">
-        <h1>Generator & Salin Kalimat</h1>
-        <p class="subtitle">Generator kalimat acak berdasarkan negara dan generator username</p>
+        <!-- Header dengan Theme Toggle -->
+        <div class="header">
+            <h1></h1>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <p class="subtitle"></p>
         
         <!-- Tab Navigation -->
         <div class="tab-navigation">
-            <button class="tab-button active" data-tab="sentence">Kalimat</button>
+            <button class="tab-button active" data-tab="sentence">kata-kata</button>
             <button class="tab-button" data-tab="username">Username</button>
         </div>
         
@@ -313,7 +428,7 @@
             </div>
 
             <div class="button-group">
-                <button id="generate-btn" class="generate-btn">Generate Kalimat</button>
+                <button id="generate-btn" class="generate-btn">Generate kata2</button>
                 <button id="refresh-sentence-btn" class="refresh-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
@@ -325,18 +440,16 @@
         
         <!-- Tab Content for Username Generator -->
         <div id="username-tab" class="tab-content">
-            <!-- Pemilih jumlah username -->
             <div class="quantity-selector">
                 <label for="quantity-input">Jumlah Username:</label>
                 <input type="number" id="quantity-input" min="1" max="100" value="5" placeholder="Masukkan jumlah...">
             </div>
             
-            <!-- Textarea untuk hasil username -->
             <textarea id="usernames-result" readonly placeholder="Hasil username akan muncul di sini..."></textarea>
 
             <div class="button-group">
                 <button id="generate-usernames-btn" class="generate-btn">Generate Username</button>
-                <button id="copy-all-btn" class="generate-btn copy-all-btn">Salin Semua</button>
+                <button id="copy-all-btn" class="copy-all-btn">Salin Semua</button>
                 <button id="refresh-username-btn" class="refresh-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
@@ -400,6 +513,10 @@
         // Tab elements
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
+        
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme');
 
         // Definisikan ikon SVG
         const iconCopy = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
@@ -457,9 +574,8 @@
         // Function to generate multiple usernames
         function generateUsernames() {
             let quantity = parseInt(quantityInput.value);
-            // Validasi input
             if (isNaN(quantity) || quantity < 1) {
-                quantity = 5; // Default ke 5 jika input tidak valid
+                quantity = 5;
                 quantityInput.value = 5;
             }
 
@@ -482,14 +598,14 @@
         function refreshSentenceTab() {
             sentenceContainer.classList.remove('visible');
             sentenceDisplay.textContent = '';
-            countrySelect.selectedIndex = 0; // Reset ke pilihan pertama
+            countrySelect.selectedIndex = 0;
         }
         
         // Function to refresh username tab
         function refreshUsernameTab() {
             usernamesResult.classList.remove('visible');
             usernamesResult.value = '';
-            quantityInput.value = 5; // Reset ke default
+            quantityInput.value = 5;
         }
 
         // Function to copy text to clipboard
@@ -534,6 +650,22 @@
         generateUsernamesBtn.addEventListener('click', generateUsernames);
         copyAllBtn.addEventListener('click', copyAllUsernames);
         refreshUsernameBtn.addEventListener('click', refreshUsernameTab);
+
+        // --- Theme Toggle Logic ---
+        if (currentTheme) {
+            document.body.classList.toggle('dark-mode', currentTheme === 'dark');
+            themeToggle.checked = currentTheme === 'dark';
+        }
+
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
 
         // Tampilkan kalimat acak saat halaman pertama kali dimuat
         window.onload = () => {
