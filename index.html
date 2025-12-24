@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator & Salin Kalimat</title>
+    <style>
+        /* Google Fonts untuk tampilan yang lebih menarik */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        /* CSS untuk tampilan */
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Background gradien agar tidak polos */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .content-box {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        /* Container untuk menampung kalimat dan tombol salin */
+        .sentence-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Sejajarkan ke atas untuk teks multi-baris */
+            gap: 15px; /* Jarak antara teks dan tombol */
+            margin: 30px 0;
+            opacity: 0; /* Awalnya disembunyikan */
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Tampilkan container dengan efek fade-in */
+        .sentence-container.visible {
+            opacity: 1;
+        }
+
+        #sentence-display {
+            font-size: 1.1rem;
+            color: #444;
+            text-align: left;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            flex-grow: 1; /* Biarkan area teks memenuhi sisa ruang */
+            white-space: pre-wrap; /* Hormati line break (\n) dari JavaScript */
+            word-wrap: break-word;
+        }
+
+        /* Gaya untuk tombol salin */
+        .copy-btn {
+            background-color: #e4e6eb;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.2s ease-in-out;
+            flex-shrink: 0; /* Mencegah tombol mengecil */
+        }
+
+        .copy-btn:hover {
+            background-color: #d8dadf;
+        }
+        
+        /* Warna tombol saat berhasil menyalin */
+        .copy-btn.copied {
+            background-color: #28a745; /* Hijau untuk sukses */
+        }
+
+        /* Gaya untuk ikon SVG di dalam tombol */
+        .copy-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #65676b; /* Warna ikon default */
+            transition: fill 0.2s ease-in-out;
+        }
+
+        .copy-btn.copied svg {
+            fill: #ffffff; /* Warna ikon putih saat sukses */
+        }
+
+        .generate-btn {
+            background-color: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px; /* Tombol berbentuk kapsul */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:hover {
+            background-color: #5469d4;
+            transform: translateY(-3px); /* Efek mengangkat saat hover */
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .generate-btn:active {
+            transform: translateY(-1px); /* Efek menekan */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content-box">
+        <h1>Generator & Salin Kalimat</h1>
+        <p class="subtitle">Klik tombol untuk menghasilkan kalimat acak, lalu salin dengan mudah.</p>
+        
+        <!-- Container untuk kalimat dan tombol salin -->
+        <div id="sentence-container" class="sentence-container">
+            <div id="sentence-display" class="sentence-display">
+                <!-- Kalimat acak akan muncul di sini -->
+            </div>
+            <button id="copy-btn" class="copy-btn" title="Salin ke clipboard">
+                <!-- Ikon Salin -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                </svg>
+            </button>
+        </div>
+
+        <button id="generate-btn" class="generate-btn">Generate Kalimat Baru</button>
+    </div>
+
+    <script>
+        // --- DAFTAR KALIMAT ---
+        // Gunakan \n untuk membuat baris baru.
+        // Gunakan \" jika ada tanda kutip di dalam kalimat.
+        const sentences = [
+            "Hi old man\nMy name is Harriet\nI've been waiting for your answer since yesterday\nWhat's your name and where are you from?",
+            "My name is Michelle . I'm from the USA 🇺🇸.\nI'm single, 63, and have been battling alcohol addiction for 8 years.\nToday marks 600 days of sobriety. ❤️🩹💔",
+            "Sir… my name is Elsa\nI'm from USA. I politely asked you before, \"Where are you from?\" Please tell me. This is my last chance",
+            "My name is Justice. I’m 52 and grateful.\nIs my age a problem? I was born in 1973.",
+            "My name is Abbie. I’m 67 today 🎂☺️ happy birthday to me I guess 🤗\nWhere are you? I'll drive to you, I'm serious!Where you from?",
+            "Hello\nMy name is Gwen\nI am 39\nI wonder how far away we are Can you tell me where you are from?"
+        ];
+
+        // --- LOGIKA JAVASCRIPT ---
+        const generateBtn = document.getElementById('generate-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const sentenceDisplay = document.getElementById('sentence-display');
+        const sentenceContainer = document.getElementById('sentence-container');
+
+        // Definisikan ikon SVG
+        const iconCopy = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
+        const iconCheck = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
+
+        // Fungsi untuk menghasilkan kalimat acak
+        function generateRandomSentence() {
+            const randomIndex = Math.floor(Math.random() * sentences.length);
+            const randomSentence = sentences[randomIndex];
+
+            // Sembunyikan dulu untuk efek fade
+            sentenceContainer.classList.remove('visible');
+
+            setTimeout(() => {
+                sentenceDisplay.textContent = randomSentence;
+                sentenceContainer.classList.add('visible');
+            }, 200); // Waktu tunggu untuk transisi yang halus
+        }
+
+        // Fungsi untuk menyalin teks
+        function copyToClipboard() {
+            const textToCopy = sentenceDisplay.textContent;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Ubah ikon dan warna tombol
+                copyBtn.classList.add('copied');
+                copyBtn.innerHTML = iconCheck;
+
+                // Kembalikan ke semula setelah 2 detik
+                setTimeout(() => {
+                    copyBtn.classList.remove('copied');
+                    copyBtn.innerHTML = iconCopy;
+                }, 2000);
+            }).catch(err => {
+                console.error('Gagal menyalin teks: ', err);
+                alert('Gagal menyalin teks. Silakan salin secara manual.');
+            });
+        }
+
+        // Tambahkan event listener untuk tombol
+        generateBtn.addEventListener('click', generateRandomSentence);
+        copyBtn.addEventListener('click', copyToClipboard);
+
+        // Tampilkan kalimat acak saat halaman pertama kali dimuat
+        window.onload = generateRandomSentence;
+
+    </script>
+
+</body>
+</html>
