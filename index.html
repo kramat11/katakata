@@ -44,19 +44,63 @@
             font-size: 16px;
         }
 
-        /* Gaya untuk pemilih negara */
-        .country-selector {
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
             margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
         }
 
-        .country-selector label {
+        .tab-button {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #777;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Gaya untuk pemilih negara dan jumlah */
+        .country-selector, .quantity-selector {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .country-selector label, .quantity-selector label {
             display: block;
             margin-bottom: 10px;
             color: #555;
             font-weight: 600;
         }
 
-        .country-selector select {
+        .country-selector select, .quantity-selector input {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
@@ -65,11 +109,11 @@
             font-family: 'Poppins', sans-serif;
             font-size: 16px;
             color: #333;
-            cursor: pointer;
             transition: border-color 0.3s ease;
+            box-sizing: border-box; /* Pastikan padding tidak menambah lebar */
         }
 
-        .country-selector select:focus {
+        .country-selector select:focus, .quantity-selector input:focus {
             outline: none;
             border-color: #667eea;
         }
@@ -78,14 +122,13 @@
         .sentence-container {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start; /* Sejajarkan ke atas untuk teks multi-baris */
-            gap: 15px; /* Jarak antara teks dan tombol */
+            align-items: flex-start;
+            gap: 15px;
             margin: 30px 0;
-            opacity: 0; /* Awalnya disembunyikan */
+            opacity: 0;
             transition: opacity 0.5s ease-in-out;
         }
 
-        /* Tampilkan container dengan efek fade-in */
         .sentence-container.visible {
             opacity: 1;
         }
@@ -98,9 +141,31 @@
             padding: 20px;
             border-radius: 12px;
             border-left: 5px solid #667eea;
-            flex-grow: 1; /* Biarkan area teks memenuhi sisa ruang */
-            white-space: pre-wrap; /* Hormati line break (\n) dari JavaScript */
+            flex-grow: 1;
+            white-space: pre-wrap;
             word-wrap: break-word;
+        }
+        
+        /* Gaya untuk textarea hasil username */
+        #usernames-result {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem; /* Font size lebih kecil */
+            color: #444;
+            resize: vertical; /* Biarkan user resize vertikal */
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            margin: 30px 0;
+            box-sizing: border-box;
+        }
+
+        #usernames-result.visible {
+            opacity: 1;
         }
 
         /* Gaya untuk tombol salin */
@@ -115,28 +180,34 @@
             justify-content: center;
             align-items: center;
             transition: background-color 0.2s ease-in-out;
-            flex-shrink: 0; /* Mencegah tombol mengecil */
+            flex-shrink: 0;
         }
 
         .copy-btn:hover {
             background-color: #d8dadf;
         }
         
-        /* Warna tombol saat berhasil menyalin */
         .copy-btn.copied {
-            background-color: #28a745; /* Hijau untuk sukses */
+            background-color: #28a745;
         }
 
-        /* Gaya untuk ikon SVG di dalam tombol */
         .copy-btn svg {
             width: 20px;
             height: 20px;
-            fill: #65676b; /* Warna ikon default */
+            fill: #65676b;
             transition: fill 0.2s ease-in-out;
         }
 
         .copy-btn.copied svg {
-            fill: #ffffff; /* Warna ikon putih saat sukses */
+            fill: #ffffff;
+        }
+
+        /* Container untuk tombol generate dan copy all */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap; /* Biarkan tombol pindah baris di layar kecil */
         }
 
         .generate-btn {
@@ -146,7 +217,7 @@
             padding: 15px 35px;
             font-size: 16px;
             font-weight: 600;
-            border-radius: 50px; /* Tombol berbentuk kapsul */
+            border-radius: 50px;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
@@ -154,52 +225,130 @@
 
         .generate-btn:hover {
             background-color: #5469d4;
-            transform: translateY(-3px); /* Efek mengangkat saat hover */
+            transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
         }
 
         .generate-btn:active {
-            transform: translateY(-1px); /* Efek menekan */
+            transform: translateY(-1px);
+        }
+        
+        /* Gaya untuk tombol Refresh */
+        .refresh-btn {
+            background-color: #6c757d; /* Warna abu-abu netral */
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Jarak antara ikon dan teks */
+        }
+        
+        .refresh-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .refresh-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        .refresh-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Gaya khusus untuk tombol copy all */
+        .copy-all-btn {
+            background-color: #28a745; /* Warna hijau untuk menonjol */
+        }
+
+        .copy-all-btn:hover {
+            background-color: #218838; /* Hijau lebih tua saat hover */
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
         }
     </style>
 </head>
 <body>
 
     <div class="content-box">
-        <h1></h1>
-        <p class="subtitle"></p>
+        <h1>Generator & Salin Kalimat</h1>
+        <p class="subtitle">Generator kalimat acak berdasarkan negara dan generator username</p>
         
-        <!-- Pemilih negara -->
-        <div class="country-selector">
-            <label for="country-select">Negara:</label>
-            <select id="country-select">
-                <option value="america">America</option>
-                <option value="germany">Germany</option>
-                <option value="france">France</option>
-                <option value="brazil">Brazil</option>
-            </select>
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-button active" data-tab="sentence">Kalimat</button>
+            <button class="tab-button" data-tab="username">Username</button>
         </div>
         
-        <!-- Container untuk kalimat dan tombol salin -->
-        <div id="sentence-container" class="sentence-container">
-            <div id="sentence-display" class="sentence-display">
-                <!-- Kalimat acak akan muncul di sini -->
+        <!-- Tab Content for Sentence Generator -->
+        <div id="sentence-tab" class="tab-content active">
+            <div class="country-selector">
+                <label for="country-select">Negara:</label>
+                <select id="country-select">
+                    <option value="america">America</option>
+                    <option value="germany">Germany</option>
+                    <option value="france">France</option>
+                    <option value="brazil">Brazil</option>
+                </select>
             </div>
-            <button id="copy-btn" class="copy-btn" title="Salin ke clipboard">
-                <!-- Ikon Salin -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                </svg>
-            </button>
-        </div>
+            
+            <div id="sentence-container" class="sentence-container">
+                <div id="sentence-display" class="sentence-display">
+                    <!-- Kalimat acak akan muncul di sini -->
+                </div>
+                <button id="copy-btn" class="copy-btn" title="Salin ke clipboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                    </svg>
+                </button>
+            </div>
 
-        <button id="generate-btn" class="generate-btn">Generate</button>
+            <div class="button-group">
+                <button id="generate-btn" class="generate-btn">Generate Kalimat</button>
+                <button id="refresh-sentence-btn" class="refresh-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+        </div>
+        
+        <!-- Tab Content for Username Generator -->
+        <div id="username-tab" class="tab-content">
+            <!-- Pemilih jumlah username -->
+            <div class="quantity-selector">
+                <label for="quantity-input">Jumlah Username:</label>
+                <input type="number" id="quantity-input" min="1" max="100" value="5" placeholder="Masukkan jumlah...">
+            </div>
+            
+            <!-- Textarea untuk hasil username -->
+            <textarea id="usernames-result" readonly placeholder="Hasil username akan muncul di sini..."></textarea>
+
+            <div class="button-group">
+                <button id="generate-usernames-btn" class="generate-btn">Generate Username</button>
+                <button id="copy-all-btn" class="generate-btn copy-all-btn">Salin Semua</button>
+                <button id="refresh-username-btn" class="refresh-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
         // --- DAFTAR KALIMAT BERDASARKAN NEGARA ---
-        // Gunakan \n untuk membuat baris baru.
-        // Gunakan \" jika ada tanda kutip di dalam kalimat.
         const sentencesByCountry = {
             america: [
                 "Hi old man\nMy name is Harriet\nI've been waiting for your answer since yesterday\nWhat's your name and where are you from?",
@@ -239,12 +388,51 @@
         const sentenceDisplay = document.getElementById('sentence-display');
         const sentenceContainer = document.getElementById('sentence-container');
         const countrySelect = document.getElementById('country-select');
+        const refreshSentenceBtn = document.getElementById('refresh-sentence-btn');
+        
+        // Username elements
+        const generateUsernamesBtn = document.getElementById('generate-usernames-btn');
+        const copyAllBtn = document.getElementById('copy-all-btn');
+        const usernamesResult = document.getElementById('usernames-result');
+        const quantityInput = document.getElementById('quantity-input');
+        const refreshUsernameBtn = document.getElementById('refresh-username-btn');
+        
+        // Tab elements
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
 
         // Definisikan ikon SVG
         const iconCopy = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
         const iconCheck = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
 
-        // Fungsi untuk menghasilkan kalimat acak
+        // Function to generate random full name
+        function randomFullName() {
+            const firstNames = [
+                "Ariana","Amelia","Aurora","Ava","Abigail","Alice","Allison","Aria","Anna","Annabelle","Amber","Andrea","Ashley","Bianca","Bella","Brooklyn","Blair","Chloe","Clara","Charlotte","Adriana","Adele","Adeline","Alexis","Alexa","Alicia","Alina","Alison","Amara","Amaya","Angelina","Anita","April","Ariella","Astrid","Beatrice","Bethany","Blakeley","Brenda","Bridget","Brianna","Brielle","Cadence","Carmen","Caroline","Cecilia","Celeste","Charlie","Chelsea","Christina","Cora","Courtney","Crystal","Cynthia","Dakota","Delilah","Denise","Destiny","Dominique","Eden","Edith","Eleanor","Elise","Eliza","Elizabeth","Ella","Ellen","Elsie","Esme","Estelle","Esther","Etta","Faith","Farrah","Frances","Gloria","Gwen","Hadley","Harmony","Hayden","Heidi","Helen","Holly","Hope","Indie","Ingrid","Irene","Isabelle","Isla","Ivanna","Janet","Janelle","Janice","Jenna","Jessie","Jillian","Joanna","Jordan","Joyce","Judith","Kara","Karen","Karina","Katrina","Kendall","Kenzie","Kimberly","Kristen","Lana","Leighton","Lena","Leslie","Lexi","Liliana","Lindsay","Lola","Lucia","Lucy","Lydia","Lynette","Mabel","Maeve","Magnolia","Maisie","Margaret","Maria","Marina","Marissa","Marley","Matilda","Meghan","Melanie","Melissa","Meredith","Michelle","Miranda","Morgan","Nadia","Nora","Oakley","Odette","Paige","Palmer","Patricia","Paula","Pearl","Penny","Priscilla","Reagan","Reina","Rhea","Rhianna","Rosalie","Rowan","Sadie","Samantha","Samara","Sandra","Sara","Serena","Shannon","Shelby","Skye","Skylar","Simone","Sofia","Talia","Teresa","Tessa","Tiffany","Trinity","Tyra","Valentina","Veronica","Vivian","Wendy","Whitney","Willa","Xenia","Yasmin","Yvonne","Zoey","Zelda","Alma","Angel","Annelise","Antonia","Arden","Arielle","Aviana","Bellamy","Bettina","Bliss","Brittany","Bronte","Callie","Carlie","Carissa","Cecily","Charlene","Clarissa","Colette","Corrine","Dahlia","Dana","Debby","Desiree","Devon","Dixie","Dora","Eileen","Eliana","Elowen","Ember","Emery","Emmeline","Erika","Erin","Evangeline","Everly","Fallon","Farley","Flora","Frida","Geneva","Georgina","Gianna","Greta","Gwyneth","Hadassa","Harlow","Helena","Indira","Ivory","Jada","Jamie","Jayla","Jemma","Jolie","Juniper","Kailyn","Kalea","Kallie","Kelsey","Kenna","Kenzie","Kinsley","Larissa","Leilani","Lexie","Lilliana","Lindy","Lorelei","Louisa","Lucinda","Lyra","Macy","Madeline","Mae","Marigold","Marina","Marisol","Melody","Mena","Miriam","Monica","Myra","Nadia","Nathalie","Nevaeh","Nola","Noelle","Oaklyn","Opal","Parker","Perla","Presley","Renata","Renee","Reverie","Riley","Rory","Rosie","Sable","Salma","Sasha","Selena","Serenity","Shay","Shelly","Sierra","Simona","Sonya","Stevie","Tabitha","Tara","Thea","Theresa","Tori","Uma","Vada","Valencia","Vera","Verity","Vienna","Vina","Violetta","Waverly","Zadie","Zaira","Zarina","Zinnia","Zola","Zuri","Ainsley","Amiya","Arietta","Becca","Blaire","Breanna","Callista","Camilla","Capri","Carina","Catalina","Celina","Charmaine","Cleo","Coraline","Cressida","Danica","Delaney","Demi","Elara","Ellery","Emersyn","Emilia","Estella","Felicity","Giovanna","Hadriel","Hana","Holland","Ilana","Ilaria","Jamila","Jazmine","Joelle","Kalani","Kamila","Karlee","Keira","Kiana","Kristina","Lacey","Leia","Liberty","Livia","Loretta","Luella","Madelyn","Marcelline","Marion","Marleigh","Mavis","Mckinley","Mira","Mirella","Myla","Nalani","Nellie","Neriah","Nicolette","Nori","Oriana","Paloma","Phoenyx","Promise","Rayna","Rivka","Sabina","Saffron","Sarai","Sylvie","Tegan","Tenley","Thalia","Tinley","Vanora","Vesper","Vida","Winsley","Ximena","Yara","Yesenia","Zahara","Zarina","Zaylee","Zetta","Zofia"
+            ];
+            
+            const lastNames = [
+                "Anderson","Armstrong","Bailey","Baker","Baldwin","Barnes","Bennett","Bishop","Blackwood","Blake","Bolton","Bradford","Bridges","Brooks","Brown","Campbell","Carter","Chandler","Clarke","Clayton","Cole","Collins","Cooper","Cox","Crawford","Daniels","Dawson","Davis","Dixon","Donovan","Douglas","Doyle","Edwards","Ellis","Emerson","Fisher","Fleming","Foster","Fox","Franklin","Ackerman","Adams","Adderley","Albright","Alden","Aldridge","Allerton","Ashford","Ashton","Atwood","Barclay","Barrett","Beaumont","Beckett","Bellamy","Benton","Berkeley","Bingham","Bishopson","Blackburn","Blackwell","Bloomfield","Bloomberg","Brixton","Brinton","Brockman","Bromley","Buckley","Burton","Byrne","Caldwell","Callahan","Calloway","Carlisle","Carmichael","Carrington","Carver","Chamberlain","Channing","Chapman","Charleston","Chesterton","Claymore","Clifford","Clifton","Cleveland","Clemens","Crockett","Crossley","Cumberland","Dalton","Davenport","Delaney","Dennison","Derbyshire","Devonshire","Donnelly","Draper","Drayton","Dunbar","Easton","Eaton","Ellington","Ellsworth","Elridge","Embry","Emberton","Fairchild","Fairfax","Falkner","Farrington","Fenton","Ferris","Finnegan","Fitzgerald","Fitzpatrick","Fleetwood","Fleming","Forbes","Foreman","Fosterly","Garrison","Gatlin","Gillespie","Gladstone","Godfrey","Goldberg","Goodwin","Granger","Greenfield","Greystone","Grimsley","Harrington","Hathaway","Hayward","Hemingway","Hollister","Holloway","Hollingsworth","Huxley","Ingram","Irving","Jefferson","Jennison","Jericho","Kensington","Kerrigan","Kingsley","Kirkland","Kingsford","Lancaster","Landry","Langston","Larrimore","Lennox","Leroy","Linden","Lockwood","Longley","Lovelace","Madison","Marlow","Marsden","Merrick","Merritt","Middleton","Montgomery","Montague","Moreland","Mulberry","Northwood","Norwood","Oakley","Orwell","Osborne","Oxford","Paddock","Paxton","Pendleton","Pennington","Pemberton","Prescott","Princeton","Pritchard","Quinlan","Radcliffe","Rafferty","Ramone","Redford","Remington","Renfield","Rockwell","Rosenberg","Rutherford","Salinger","Sanderson","Sanford","Schneider","Sheffield","Sherman","Shepherd","Silverman","Simmons","Sinclair","Somerset","Southwell","Stanford","Sterling","Stratford","Sutherland","Tanner","Tennyson","Thatcher","Thornton","Thurman","Tolliver","Townsend","Trenton","Truman","Underwood","Valentine","VanAllen","VanBuren","VanDermeer","Vanderbilt","Vega","Vernon","Warner","Waldorf","Waverly","Wentworth","Whitaker","Whitman","Wilder","Wilkinson","Winchester","Winslow","Winton","Woodard","Worthington","Wellington","Yorkshire","Yardley","Yarborough","Zimmerman","Ziegler","Whitlock","Adler","Ainsworth","Ashbury","Ashcroft","Astor","Bainbridge","Banner","Bardwell","Barington","Barringer","Beckford","Berrington","Billingham","Birchwood","Blackthorn","Blaisdell","Blakemore","Bloomstein","Bracken","Brayden","Briarwood","Brigham","Brighton","Brimhall","Bristol","Broadmoor","Bromfield","Brookshire","Broughton","Browning","Bryson","Buckingham","Burbank","Calderon","Calhoun","Carlstead","Carling","Carmine","Carrigan","Cavanaugh","Cavendish","Chadwick","Chalmers","Chandley","Channington","Chase","Churchill","Claremont","Clemington","Cobalt","Colborne","Colbridge","Colter","Connelly","Compton","Conway","Corbin","Cornwell","Corwin","Cranford","Crandall","Cranston","Creighton","Cromwell","Crenshaw","Creswell","Cunningham","Dallington","Dalrymple","Damascus","Danbury","Darrow","Deacon","Denham","Derringer","Devlin","Dickerson","Dillinger","Dimaggio","Donahue","Drummond","Dudley","Duncan","Dunham","Eastgate","Eastland","Eastwick","Eddington","Eddison","Ellsworth","Elmwood","Emsworth","Endicott","Everton","Fairbanks","Fairborne","Fairleigh","Falwell","Farnsworth","Fenwick","Fernwood","Ferrington","Fielding","Finch","Finsbury","Fitzroy","Fleet","Fletcher","Flint","Florence","Folsom","Fontaine","Forsythe","Fosterfield","Foxworth","François","Frampton","Galen","Galloway","Garfield","Garrisonson","Gatsby","Gentry","Gilmore","Gladwin","Goddard","Goldwin","Grafton","Grantham","Graysen","Greyson","Grimsdale","Gulliver","Hadley","Hargreaves","Harriman","Hartford","Hartwick","Hastings","Hawthorne","Haymer","Hennessy","Hensley","Hightower","Hillsborough","Hollander","Hollins","Holcroft","Hollman","Hollowell","Holland","Huxford","Hyde","Jasper","Jenkins","Jolley","Kendale","Kendrick","Kenswell","Kensmore","Kingsbridge","Kingsmore","Kingsbury","Kingston","Kipling","Kirkpatrick","Knox","Lancasterson","Langmore","Langley","Langridge","Lathan","Laurent","Laughton","Leighton","Lemont","Lennard","Lindenwood","Linton","Lockridge","Longford","Lynwood","MacAllister","MacArthur","MacGregor","MacKenzie","MacLaren","Maddox","Madrid","Maguire","Manchester","Mansfield","Marbury","Marchand","Mariner","Markham","Marlowe","Marshell","Martell","Maynard","Mercer","Meredith","Merton","Middleson","Milburn","Millerton","Millhouse","Milligan","Millwood","Milton","Montrose","Morley","Mortimer","Morrigan","Mulford","Neville","Newberry","Newfield","Newgate","Newkirk","Nightingale","Nixon","Northwoodson","Norwell","Oakridge","Oberlin","O'Rourke","Olsen","Onslow","Orion","Ormsby","Oswald","Overton","Parkinson","Parsley","Paterson","Pendragon","Penn","Perkins","Perrington","Peterson","Pickering","Pike","Pinehurst","Pratt","Prestley","Princetonson","Prior","Radley","Redmond","Reeves","Reinhart","Renshaw","Reynard","Ridgeway","Riggs","Rivers","Rivington","Rockford","Rockridge","Rogers","Romilly","Rowland","Rowley","Rutherfordson","Sandford","Samuels","Saxby","Schaefer","Schultz","Sedgwick","Selwyn","Seymour","Shannon","Sharpe","Shipman","Silverwood","Sinclairson","Slater","Smalls","Somerville","Southgate","Stark","Stanton","St. Claire","Steadman","Steadwell","Stillwater","Stone","Stonebridge","Storm","Stout","Strickland","Sutherlandson","Talisman","Tannerly","Templeton","Tennysonson","Thacker","Thorn","Thorntonson","Thornefield","Tidwell","Tilbury","Tollinson","Tollman","Torres","Townley","Travilian","Trevor","Trueman","Tucker","Underhill","Underly","Upton","Valletta","Vallaire","Valmont","Vance","Vanderlyn","VanHolt","VanKeller","Vaughn","Velasquez","Veridian","Vickers","Vincent","Voss","Wainwright","Wakefield","Walden","Wallingford","Warfield","Warley","Warrington","Waterford","Weatherby","Weldon","Wesley","Westbrook","Westfall","Whitmore","Whitstone","Wickham","Wilberton","Wilde","Winfield","Winspear","Wintonson","Wolfe","Woodrow","Wortham","Wycliffe","Wynter","Yarrow","Yeager","York","Youngblood","Zander","Zimmer"
+            ];
+            
+            const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            
+            return {
+                fullName: `${firstName} ${lastName}`,
+                firstName: firstName,
+                lastName: lastName
+            };
+        }
+
+        // Function to generate username from first and last name
+        function generateUsername(firstName, lastName) {
+            const baseUsername = `${firstName.toLowerCase()}_${lastName.toLowerCase()}`;
+            const randomDigits = Math.floor(Math.random() * 90) + 10; // Generates a number from 10 to 99
+            return baseUsername + randomDigits;
+        }
+
+        // Function to generate random sentence
         function generateRandomSentence() {
             const selectedCountry = countrySelect.value;
             const sentences = sentencesByCountry[selectedCountry];
@@ -258,42 +446,100 @@
             const randomIndex = Math.floor(Math.random() * sentences.length);
             const randomSentence = sentences[randomIndex];
 
-            // Sembunyikan dulu untuk efek fade
             sentenceContainer.classList.remove('visible');
 
             setTimeout(() => {
                 sentenceDisplay.textContent = randomSentence;
                 sentenceContainer.classList.add('visible');
-            }, 200); // Waktu tunggu untuk transisi yang halus
+            }, 200);
         }
 
-        // Fungsi untuk menyalin teks
-        function copyToClipboard() {
-            const textToCopy = sentenceDisplay.textContent;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                // Ubah ikon dan warna tombol
-                copyBtn.classList.add('copied');
-                copyBtn.innerHTML = iconCheck;
+        // Function to generate multiple usernames
+        function generateUsernames() {
+            let quantity = parseInt(quantityInput.value);
+            // Validasi input
+            if (isNaN(quantity) || quantity < 1) {
+                quantity = 5; // Default ke 5 jika input tidak valid
+                quantityInput.value = 5;
+            }
 
-                // Kembalikan ke semula setelah 2 detik
+            let allUsernames = '';
+            for (let i = 0; i < quantity; i++) {
+                const nameData = randomFullName();
+                const username = generateUsername(nameData.firstName, nameData.lastName);
+                allUsernames += username + '\n';
+            }
+            
+            usernamesResult.classList.remove('visible');
+
+            setTimeout(() => {
+                usernamesResult.value = allUsernames.trim();
+                usernamesResult.classList.add('visible');
+            }, 200);
+        }
+        
+        // Function to refresh sentence tab
+        function refreshSentenceTab() {
+            sentenceContainer.classList.remove('visible');
+            sentenceDisplay.textContent = '';
+            countrySelect.selectedIndex = 0; // Reset ke pilihan pertama
+        }
+        
+        // Function to refresh username tab
+        function refreshUsernameTab() {
+            usernamesResult.classList.remove('visible');
+            usernamesResult.value = '';
+            quantityInput.value = 5; // Reset ke default
+        }
+
+        // Function to copy text to clipboard
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                button.classList.add('copied');
+                button.innerHTML = iconCheck;
+
                 setTimeout(() => {
-                    copyBtn.classList.remove('copied');
-                    copyBtn.innerHTML = iconCopy;
+                    button.classList.remove('copied');
+                    button.innerHTML = iconCopy;
                 }, 2000);
             }).catch(err => {
                 console.error('Gagal menyalin teks: ', err);
                 alert('Gagal menyalin teks. Silakan salin secara manual.');
             });
         }
+        
+        // Function to copy all usernames
+        function copyAllUsernames() {
+            copyToClipboard(usernamesResult.value, copyAllBtn);
+        }
 
-        // Tambahkan event listener untuk tombol
+        // Tab navigation functionality
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                button.classList.add('active');
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+
+        // Event Listeners
         generateBtn.addEventListener('click', generateRandomSentence);
-        copyBtn.addEventListener('click', copyToClipboard);
+        copyBtn.addEventListener('click', () => copyToClipboard(sentenceDisplay.textContent, copyBtn));
         countrySelect.addEventListener('change', generateRandomSentence);
+        refreshSentenceBtn.addEventListener('click', refreshSentenceTab);
+        
+        generateUsernamesBtn.addEventListener('click', generateUsernames);
+        copyAllBtn.addEventListener('click', copyAllUsernames);
+        refreshUsernameBtn.addEventListener('click', refreshUsernameTab);
 
         // Tampilkan kalimat acak saat halaman pertama kali dimuat
-        window.onload = generateRandomSentence;
+        window.onload = () => {
+            generateRandomSentence();
+            generateUsernames();
+        };
     </script>
 </body>
 </html>
