@@ -44,6 +44,36 @@
             font-size: 16px;
         }
 
+        /* Gaya untuk pemilih negara */
+        .country-selector {
+            margin-bottom: 30px;
+        }
+
+        .country-selector label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .country-selector select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .country-selector select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
         /* Container untuk menampung kalimat dan tombol salin */
         .sentence-container {
             display: flex;
@@ -139,6 +169,17 @@
         <h1></h1>
         <p class="subtitle"></p>
         
+        <!-- Pemilih negara -->
+        <div class="country-selector">
+            <label for="country-select">Negara:</label>
+            <select id="country-select">
+                <option value="america">America</option>
+                <option value="germany">Germany</option>
+                <option value="france">France</option>
+                <option value="brazil">Brazil</option>
+            </select>
+        </div>
+        
         <!-- Container untuk kalimat dan tombol salin -->
         <div id="sentence-container" class="sentence-container">
             <div id="sentence-display" class="sentence-display">
@@ -156,23 +197,48 @@
     </div>
 
     <script>
-        // --- DAFTAR KALIMAT ---
+        // --- DAFTAR KALIMAT BERDASARKAN NEGARA ---
         // Gunakan \n untuk membuat baris baru.
         // Gunakan \" jika ada tanda kutip di dalam kalimat.
-        const sentences = [
-            "Hi old man\nMy name is Harriet\nI've been waiting for your answer since yesterday\nWhat's your name and where are you from?",
-            "My name is Michelle . I'm from the USA 🇺🇸.\nI'm single, 63, and have been battling alcohol addiction for 8 years.\nToday marks 600 days of sobriety. ❤️🩹💔",
-            "Sir… my name is Elsa\nI'm from USA. I politely asked you before, \"Where are you from?\" Please tell me. This is my last chance",
-            "My name is Justice. I’m 52 and grateful.\nIs my age a problem? I was born in 1973.",
-            "My name is Abbie. I’m 67 today 🎂☺️ happy birthday to me I guess 🤗\nWhere are you? I'll drive to you, I'm serious!Where you from?",
-            "Hello\nMy name is Gwen\nI am 39\nI wonder how far away we are Can you tell me where you are from?"
-        ];
+        const sentencesByCountry = {
+            america: [
+                "Hi old man\nMy name is Harriet\nI've been waiting for your answer since yesterday\nWhat's your name and where are you from?",
+                "My name is Michelle . I'm from the USA 🇺🇸.\nI'm single, 63, and have been battling alcohol addiction for 8 years.\nToday marks 600 days of sobriety. ❤️🩹💔",
+                "Sir… my name is Elsa\nI'm from USA. I politely asked you before, \"Where are you from?\" Please tell me. This is my last chance",
+                "My name is Justice. I'm 52 and grateful.\nIs my age a problem? I was born in 1973.",
+                "My name is Abbie. I'm 67 today 🎂☺️ happy birthday to me I guess 🤗\nWhere are you? I'll drive to you, I'm serious!Where you from?",
+                "Hello\nMy name is Gwen\nI am 39\nI wonder how far away we are Can you tell me where you are from?",
+                "Hey, old man!!\nWhy are you here again?\nYou still haven't told me where you live?\nCan you tell me where you live? Please answer!\nMy name is Camila !!",
+                "Hey, grandpa!! Why are you here once more? You still owe me your location? Can you share where you live? Please! I'm Sadie !!",
+                "Hey, old man!\nMy name is Carley.\nReady for Christmas 🎄❤️",
+                "𝗛𝗶𝗶\n🟢\n𝗛𝗲𝗹𝗹𝗼..\n💬",
+                "Hi, old man.\nMy name is Morgaine.\nI'm from California.\nWhere are you from?"
+            ],
+            germany: [
+                "l'm from Germany 🇩🇪 and you? 📍",
+                "Hi, I'm 32 || From Germany 🇩🇪 📍",
+                "riaß eich☺️🫶🏻\nDeutschland 🇩🇪",
+                "Woher kommt ihr ?\nIch aus Sachsen 🙏🏼",
+                "gefall ich dir?",
+                "𝗛𝗶𝗶\n🟢\n𝗛𝗲𝗹𝗹𝗼..\n💬",
+                "Ich komme aus Deutschland 🇩🇪 und du? 📍"
+            ],
+            france: [
+                "Mon CV 🌺\nNom : Peggy \nÂge : 37 ans\nTaille : 1m78\nPays : France 🇫🇷\nOrigine : Marseille, France 🇫🇷",
+                "Mon CV 🌺\nNom : Sylvie Dubiel\nÂge : 67 ans\nTaille : 1m73\nPays : France 🇫🇷\nOrigine : Allemand 🇩🇪"
+            ],
+            brazil: [
+                "Minha essência não pede permissão.\nGostei 🤷🏻‍♀️☘️50tona",
+                "Minha essência não pede opinião.❤️🔥"
+            ]
+        };
 
         // --- LOGIKA JAVASCRIPT ---
         const generateBtn = document.getElementById('generate-btn');
         const copyBtn = document.getElementById('copy-btn');
         const sentenceDisplay = document.getElementById('sentence-display');
         const sentenceContainer = document.getElementById('sentence-container');
+        const countrySelect = document.getElementById('country-select');
 
         // Definisikan ikon SVG
         const iconCopy = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
@@ -180,6 +246,15 @@
 
         // Fungsi untuk menghasilkan kalimat acak
         function generateRandomSentence() {
+            const selectedCountry = countrySelect.value;
+            const sentences = sentencesByCountry[selectedCountry];
+            
+            if (!sentences || sentences.length === 0) {
+                sentenceDisplay.textContent = "Tidak ada kalimat untuk negara ini.";
+                sentenceContainer.classList.add('visible');
+                return;
+            }
+            
             const randomIndex = Math.floor(Math.random() * sentences.length);
             const randomSentence = sentences[randomIndex];
 
@@ -215,11 +290,10 @@
         // Tambahkan event listener untuk tombol
         generateBtn.addEventListener('click', generateRandomSentence);
         copyBtn.addEventListener('click', copyToClipboard);
+        countrySelect.addEventListener('change', generateRandomSentence);
 
         // Tampilkan kalimat acak saat halaman pertama kali dimuat
         window.onload = generateRandomSentence;
-
     </script>
-
 </body>
 </html>
